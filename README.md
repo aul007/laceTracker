@@ -1,6 +1,6 @@
 # laceTracker
 
-laceTracker.py parses [Lace Market](www.lacemarket.us) for the names and prices of all the listings shown on the site and stores the information in a database. It parses [Lace Market](www.lacemarket.us) by scraping the data from each page starting with the page specified by the user. The parser will move on to the pages of the next brand (in alphabetical order) once it has completed parsing all of the pages of the previous brand.  
+laceTracker.py parses [Lace Market](www.lacemarket.us) for the names and prices of all the listings shown on the site and stores the information in a database. It parses [Lace Market](www.lacemarket.us) by scraping the data from each page starting with the page specified by the user. The parser will move on to the pages of the next brand (in alphabetical order) once it has completed parsing all of the pages of the current brand.  
 
 There are a few command line flags to be aware of (shown in parens) :
 
