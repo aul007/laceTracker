@@ -5,7 +5,7 @@ import urllib2
 import MySQLdb
 import re
 
-db = MySQLdb.connect("localhost","root","+r1t0n$k1k1b0uDiN", "laceDB")
+db = MySQLdb.connect("localhost","root","+r1t0n$k1k1b0uDiN", "lacetest1")
 
 cursor = db.cursor()
 #cursor.execute("DROP TABLE IF EXISTS listing")
@@ -18,16 +18,19 @@ sql = """CREATE TABLE listing (
          PRIMARY KEY     (id)) """
 #cursor.execute(sql)
 
+         
 def soup_open(url):
   req = urllib2.Request(url, headers = {'User-Agent' : "Magic Browser"}) 
   response = urllib2.urlopen(req)
   soup = BeautifulSoup(response.read(),"html.parser")
   return soup 
 
+#gets the relevant data of each listing (name, prices)  
 def get_data(url,soup):
   array = []
   entry = soup.find_all("li",{"class" : "greybg"})
 
+  #loops through all the entries and grabs name and prices 
   for i in range(len(entry)):
     name = entry[i].find_all("div",{"class": "data-box"}) 
     buyType = entry[i].find_all("p",{"class" : "currentp"})
@@ -64,6 +67,7 @@ def get_data(url,soup):
           BIN = kind
           p2 = intPrice 
     
+    #inserts listing into database       
     try:
       cursor.execute("""INSERT INTO listing (name, currentPrice, buyItNow)VALUES(%r,%    s,%s)""",(n,p,p2))
       db.commit()
@@ -73,7 +77,7 @@ def get_data(url,soup):
       print n 
 
 
-
+#method to loop through all of the brands 
 def brand_urls(url2, brand_num, page_num):
   soup = soup_open(url2)
   page = brand_num
@@ -92,15 +96,11 @@ def brand_urls(url2, brand_num, page_num):
       page = 1 
       soup = soup_open(url)
       message = soup.find_all("div", {"align": "center"})
-      '''  
-      else:
-        brand = url3
-        page = page_num
-        message = soup.find_all("div", {"align": "center"}) 
-      '''
-      message = soup.find_all("div", {"align": "center"}) 
+
       #while the page exists 
       while len(message) is 0:
+        
+        #loop through each page of a specific brand 
         if brand_count is brand_num:
           if page < page_num:
             page = page_num
@@ -123,11 +123,11 @@ def brand_urls(url2, brand_num, page_num):
       print brand_count 
   return url
   
-  return ""
+
 def main():
   url2 = "http://www.lacemarket.us/"
-  brand_num = 39
-  page_num = 124
+  brand_num = input("enter a brand number: ")
+  page_num = input("enter a brand page number: ")
   brand_urls(url2,brand_num, page_num)
 
 main()  
